@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="ivy-report.xsl"?>
+<ivy-report version="1.0">
+	<info
+		organisation="agodascrap"
+		module="agodascrap_2.11"
+		revision="1.0"
+		conf="runtime-internal"
+		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, sources, docs, pom, scala-tool"
+		date="20140827005223"/>
+	<dependencies>
+		<module organisation="com.google.code.gson" name="gson">
+			<revision name="2.2.4" status="release" pubdate="20130514045652" resolver="public" artresolver="public" homepage="http://code.google.com/p/google-gson/" downloaded="true" searched="true" default="false" conf="default, compile, runtime, default(compile), master" position="2">
+				<license name="The Apache Software License, Version 2.0" url="http://www.apache.org/licenses/LICENSE-2.0.txt"/>
+				<metadata-artifact status="successful" details="" size="8038" time="1304" location="/Users/jasoet/.ivy2/cache/com.google.code.gson/gson/ivy-2.2.4.xml" searched="true" original-local-location="/Users/jasoet/.ivy2/cache/com.google.code.gson/gson/ivy-2.2.4.xml.original" origin-is-local="false" origin-location="http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.pom"/>
+				<caller organisation="agodascrap" name="agodascrap_2.11" conf="compile, runtime-internal, runtime, optional" rev="2.2.4" rev-constraint-default="2.2.4" rev-constraint-dynamic="2.2.4" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="gson" type="jar" ext="jar" status="successful" details="" size="190432" time="2416" location="/Users/jasoet/.ivy2/cache/com.google.code.gson/gson/jars/gson-2.2.4.jar">
+						<origin-location is-local="false" location="http://repo1.maven.org/maven2/com/google/code/gson/gson/2.2.4/gson-2.2.4.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.jsoup" name="jsoup">
+			<revision name="1.7.3" status="release" pubdate="20131111120932" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://jsoup.org/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="1">
+				<license name="The MIT License" url="http://jsoup.com/license"/>
+				<metadata-artifact status="no" details="" size="2874" time="0" location="/Users/jasoet/.ivy2/cache/org.jsoup/jsoup/ivy-1.7.3.xml" searched="false" origin-is-local="false" origin-location="http://repo1.maven.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.pom"/>
+				<caller organisation="agodascrap" name="agodascrap_2.11" conf="compile, runtime-internal, runtime, optional" rev="1.7.3" rev-constraint-default="1.7.3" rev-constraint-dynamic="1.7.3" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="jsoup" type="jar" ext="jar" status="no" details="" size="297387" time="0" location="/Users/jasoet/.ivy2/cache/org.jsoup/jsoup/jars/jsoup-1.7.3.jar">
+						<origin-location is-local="false" location="http://repo1.maven.org/maven2/org/jsoup/jsoup/1.7.3/jsoup-1.7.3.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+		<module organisation="org.scala-lang" name="scala-library">
+			<revision name="2.11.1" status="release" pubdate="20140520040221" resolver="sbt-chain" artresolver="sbt-chain" homepage="http://www.scala-lang.org/" extra-info.apiURL="http://www.scala-lang.org/api/2.11.1/" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="0">
+				<license name="BSD 3-Clause" url="http://www.scala-lang.org/license.html"/>
+				<metadata-artifact status="no" details="" size="2640" time="0" location="/Users/jasoet/.ivy2/cache/org.scala-lang/scala-library/ivy-2.11.1.xml" searched="false" origin-is-local="false" origin-location="file:/usr/local/Cellar/typesafe-activator/1.2.7/libexec/repository/org.scala-lang/scala-library/2.11.1/ivys/ivy.xml"/>
+				<caller organisation="agodascrap" name="agodascrap_2.11" conf="compile, runtime-internal, runtime, optional" rev="2.11.1" rev-constraint-default="2.11.1" rev-constraint-dynamic="2.11.1" callerrev="1.0"/>
+				<artifacts>
+					<artifact name="scala-library" type="jar" ext="jar" status="no" details="" size="5538130" time="0" location="/Users/jasoet/.ivy2/cache/org.scala-lang/scala-library/jars/scala-library-2.11.1.jar">
+						<origin-location is-local="false" location="file:/usr/local/Cellar/typesafe-activator/1.2.7/libexec/repository/org.scala-lang/scala-library/2.11.1/jars/scala-library.jar"/>
+					</artifact>
+				</artifacts>
+			</revision>
+		</module>
+	</dependencies>
+</ivy-report>
