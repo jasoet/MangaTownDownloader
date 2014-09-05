@@ -1,4 +1,4 @@
-package com.hulaa.scala.agoda
+package org.jasoet.scala.mangatown
 
 import com.typesafe.scalalogging.Logger
 import org.jsoup.Jsoup

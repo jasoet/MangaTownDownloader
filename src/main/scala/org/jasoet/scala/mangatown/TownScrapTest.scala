@@ -1,4 +1,4 @@
-package com.hulaa.scala.agoda
+package org.jasoet.scala.mangatown
 
 import java.net.SocketTimeoutException
 
