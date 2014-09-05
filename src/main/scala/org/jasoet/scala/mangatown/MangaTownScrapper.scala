@@ -34,8 +34,8 @@ class MangaTownScrapper(val url: String) {
 
   logger.info("Got Manga Title[" + _title + "] with " + _chapterListElements.size() + " chapters")
 
-  val _chapterList: List[MangaTownChapter] = _chapterListElements.asScala.par.map { e =>
-
+  lazy val _chapterList: List[MangaTownChapter] = _chapterListElements.asScala.par.map { e =>
+    logger.info("Processing chapter List ")
     val chTitle = e.select("span").size() match {
       case 0 => ""
       case 1 => ""
