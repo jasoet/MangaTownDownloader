@@ -29,6 +29,11 @@
     <orderEntry type="library" name="SBT: org.jsoup:jsoup:1.7.3" level="project" />
     <orderEntry type="library" name="SBT: org.scala-lang:scala-library:2.11.1" level="project" />
     <orderEntry type="library" name="SBT: com.google.code.gson:gson:2.2.4" level="project" />
+    <orderEntry type="library" name="SBT: com.typesafe.scala-logging:scala-logging_2.11:3.1.0" level="project" />
+    <orderEntry type="library" name="SBT: org.scala-lang:scala-reflect:2.11.1" level="project" />
+    <orderEntry type="library" name="SBT: org.slf4j:slf4j-api:1.7.7" level="project" />
+    <orderEntry type="library" name="SBT: ch.qos.logback:logback-classic:1.1.2" level="project" />
+    <orderEntry type="library" name="SBT: ch.qos.logback:logback-core:1.1.2" level="project" />
   </component>
 </module>
 

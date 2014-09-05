@@ -31,6 +31,7 @@ import java.util.Map;
 public class AgodaScrapper {
 
     public static void main(String[] args) throws IOException {
+
         Document doc = Jsoup.connect("http://www.agoda.com/hotel-tentrem-yogyakarta/hotel/yogyakarta-id.html").get();
         Elements title = doc.select("#ctl00_ctl00_MainContent_ContentMain_HotelHeaderHD_lblHotelName");
         Elements address = doc.select("p.sblueboldunder");
@@ -39,12 +40,14 @@ public class AgodaScrapper {
         Elements pictures = doc.select("#thumbs>table>tbody>tr img");
         Elements usefulInfos = doc.select("#ctl00_ctl00_MainContent_ContentMain_HotelInformation1_pnlUsefulInfo div.pspacer");
         Elements facilities = doc.select("#tbl_fac>tbody>tr");
+        Elements totalScore = doc.select("#ctl00_ctl00_MainContent_ContentMain_HotelReview1_lblTotalScore");
 
         System.out.println("Name : " + title.text());
         System.out.println("Latitude : " + splitQuery(loc.attr("href")).get("latitude"));
         System.out.println("Longitude : " + splitQuery(loc.attr("href")).get("longitude"));
         System.out.println("Description : " + description.text());
         System.out.println("Address : " + address.text().substring(0, address.text().indexOf('(')));
+        System.out.println("Total Score : " + totalScore.text());
 
         pictures.forEach(e -> {
             System.out.println("Image " + e.attr("alt") + " - " + e.attr("src").replace("_TMB", ""));

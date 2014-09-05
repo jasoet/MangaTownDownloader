@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -63,12 +64,7 @@ public class MapToListCollector<S, T> implements Collector<Map<S, T>, Map<S, Lis
 
     @Override
     public Function<Map<S, List<T>>, Map<S, List<T>>> finisher() {
-        return new Function<Map<S, List<T>>, Map<S, List<T>>>() {
-            @Override
-            public Map<S, List<T>> apply(Map<S, List<T>> sListMap) {
-                return sListMap;
-            }
-        };
+        return TreeMap::new;
     }
 
     @Override
