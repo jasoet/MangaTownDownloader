@@ -134,9 +134,9 @@ class MangaTownScrapper(val url: String) {
     val chapterList = chapterPageList(chapter)
     val separator = System.getProperty("file.separator")
     val chapPath = destination + separator + chapter.number + "-" + chapter.chapterTitle
-    val downloader = ImageDownloader(chapPath)
     val zipDestination = destination + separator + s"${chapter.number}-${chapter.chapterTitle}.cbr"
     if (!Paths.get(zipDestination).toFile.exists()) {
+       val downloader = ImageDownloader(chapPath)
       chapterList.par.foreach { p =>
         downloader.downloadImage(p.imageUrl, p.number)
       }
