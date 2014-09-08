@@ -87,7 +87,7 @@ class MangaTownScrapper(val url: String) {
     restPage
   }
 
-  def createFileList(file: File): List[String] = {
+  private def createFileList(file: File): List[String] = {
     file match {
       case fileIx if fileIx.isFile => {
         List(fileIx.getAbsoluteFile.toString)
@@ -102,7 +102,7 @@ class MangaTownScrapper(val url: String) {
     }
   }
 
-  def createZip(filePaths: List[String], outputFilename: String) = {
+  private def createZip(filePaths: List[String], outputFilename: String) = {
     try {
       val fileOutputStream = new FileOutputStream(outputFilename)
       val zipOutputStream = new ZipOutputStream(fileOutputStream)
@@ -135,15 +135,21 @@ class MangaTownScrapper(val url: String) {
     val separator = System.getProperty("file.separator")
     val chapPath = destination + separator + chapter.number + "-" + chapter.chapterTitle
     val downloader = ImageDownloader(chapPath)
-    chapterList.par.foreach { p =>
-      downloader.downloadImage(p.imageUrl, p.number)
+    val zipDestination = destination + separator + s"${chapter.number}-${chapter.chapterTitle}.cbr"
+    if (!Paths.get(zipDestination).toFile.exists()) {
+      chapterList.par.foreach { p =>
+        downloader.downloadImage(p.imageUrl, p.number)
+      }
+      logger.debug("Downloading Image Finished. Zipping... ")
+      val filePaths = createFileList(Paths.get(chapPath).toFile)
+      if (createZip(filePaths, zipDestination)) {
+        logger.debug("Files Zipped, Delete directory... ")
+        FileUtils.deleteDirectory(Paths.get(chapPath).toFile)
+      }
+    } else {
+      logger.debug("Already Downloaded. Skipping... ")
     }
-    logger.debug("Downloading Image Finished. Zipping... ")
-    val filePaths = createFileList(Paths.get(chapPath).toFile)
-    if (createZip(filePaths, destination + separator + s"${chapter.number}-${chapter.chapterTitle}.cbr")) {
-      logger.debug("Files Zipped, Delete directory... ")
-      FileUtils.deleteDirectory(Paths.get(chapPath).toFile)
-    }
+
   }
 }
 

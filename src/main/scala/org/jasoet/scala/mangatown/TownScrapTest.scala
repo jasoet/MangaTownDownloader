@@ -1,5 +1,6 @@
 package org.jasoet.scala.mangatown
 
+import scala.collection.mutable.ArrayBuffer
 import scala.util.control.Exception
 
 /**
@@ -15,11 +16,11 @@ import scala.util.control.Exception
 
 object TownScrapTest {
   def main(args: Array[String]): Unit = {
-    val shin = MangaTownScrapper("http://www.mangatown.com/manga/one_piece/")
+    val mangaTownScrapper = MangaTownScrapper("http://www.mangatown.com/manga/one_piece/")
     val st = System.currentTimeMillis()
-    val range = Range.Double(2, 3, 0.1)
+    val range = Range.Double(200, 400, 0.1)
 
-    val downloadChapters = shin.chapterList.par.filter { c =>
+    val downloadChapters = mangaTownScrapper.chapterList.par.filter { c =>
       Exception.failAsValue(classOf[Exception])(false) {
         range.contains(c.number.toDouble)
       }
@@ -28,12 +29,27 @@ object TownScrapTest {
     val separator = System.getProperty("file.separator")
     val userHome = System.getProperty("user.home")
 
+    val failedChapter = ArrayBuffer.empty[MangaTownChapter]
     downloadChapters.foreach { c =>
-      println(s"Downloading ${c.mangaTitle} - ${c.number} - ${c.chapterTitle} -  ${c.url}")
-      shin.downloadChapter(c, userHome + separator + "manga" + separator + c.mangaTitle)
+      try {
+        println(s"Downloading ${c.mangaTitle} - ${c.number} - ${c.chapterTitle} -  ${c.url}")
+        mangaTownScrapper.downloadChapter(c, userHome + separator + "manga" + separator + c.mangaTitle)
+      } catch {
+        case _: Throwable =>
+          println(s"Failed to Download ${c.mangaTitle} - ${c.number} - ${c.chapterTitle} From URL ${c.url}")
+          failedChapter += c
+      }
     }
-    println("Process Takes  " + (System.currentTimeMillis() - st) + " ms")
 
+    println("Process Takes  " + (System.currentTimeMillis() - st) + " ms")
+    println(s"With ${failedChapter.size} failed chapters ")
+    failedChapter.sortBy { c =>
+      Exception.failAsValue(classOf[Exception])(0.0) {
+        c.number.toDouble
+      }
+    }.foreach { c =>
+      println(s"Failed to Download ${c.mangaTitle} - ${c.number} - ${c.chapterTitle} From URL ${c.url}")
+    }
 
   }
 }
