@@ -26,7 +26,7 @@ object TownScrapMain {
 
       val mangaTownScrapper = MangaTownScrapper(mangaUrl)
       val st = System.currentTimeMillis()
-      val range = Range.Double(startRange, endRange, 0.1)
+      val range = Range.Double(startRange, endRange + 1, 0.1)
 
       val downloadChapters = mangaTownScrapper.chapterList.par.filter { c =>
         Exception.failAsValue(classOf[Exception])(false) {
