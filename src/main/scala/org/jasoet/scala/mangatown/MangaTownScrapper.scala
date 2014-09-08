@@ -42,10 +42,20 @@ class MangaTownScrapper(val url: String) {
   logger.debug(s"Got Manga Title[${_title}] with ${_chapterListElements.size()} chapters")
 
   private lazy val _chapterList: List[MangaTownChapter] = _chapterListElements.asScala.par.map { e =>
+
+    def sanitizeName(name: String): String = {
+      val result = name.replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
+      if (result.equalsIgnoreCase("new")) {
+        ""
+      } else {
+        result
+      }
+    }
+
     val chTitle = e.select("span").size() match {
-      case 2 => e.select("span").get(0).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
-      case 3 => e.select("span").get(1).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
-      case 4 => e.select("span").get(1).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
+      case 2 => sanitizeName(e.select("span").get(0).text())
+      case 3 => sanitizeName(e.select("span").get(1).text())
+      case 4 => sanitizeName(e.select("span").get(1).text())
       case _ => ""
     }
 
