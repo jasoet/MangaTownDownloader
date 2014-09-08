@@ -1,5 +1,7 @@
 package org.jasoet.scala.mangatown
 
+import java.nio.file.Paths
+
 import com.typesafe.scalalogging.Logger
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -28,12 +30,12 @@ class MangaTownScrapper(val url: String) {
 
   private val logger = Logger(LoggerFactory.getLogger(MangaTownChapter.getClass))
 
-  logger.info("Start Processing URL : " + url)
+  logger.debug("Start Processing URL : " + url)
   private val _mainPageDoc: Document = Jsoup.connect(this.url).get()
   private val _title: String = _mainPageDoc.select(".article_content>h1.title-top").text()
   private val _chapterListElements: Elements = _mainPageDoc.select("ul.chapter_list>li")
 
-  logger.info(s"Got Manga Title[${_title}] with ${_chapterListElements.size()} chapters")
+  logger.debug(s"Got Manga Title[${_title}] with ${_chapterListElements.size()} chapters")
 
   private lazy val _chapterList: List[MangaTownChapter] = _chapterListElements.asScala.par.map { e =>
     val chTitle = e.select("span").size() match {
@@ -53,24 +55,23 @@ class MangaTownScrapper(val url: String) {
     }
   }
 
-
   def chapterList: List[MangaTownChapter] = _chapterList
 
   def title: String = _title
 
   def chapterPageList(chapter: MangaTownChapter): List[MangaTownChapterPage] = {
-    logger.info("Grab Detail Chapter [" + chapter.mangaTitle + "-" + chapter.number + "] from url[" + chapter.url + "]")
+    logger.debug("Grab Detail Chapter [" + chapter.mangaTitle + "-" + chapter.number + "] from url[" + chapter.url + "]")
     val pageDoc: Document = Jsoup.connect(chapter.url).get()
     val pageItemsOptions: Elements = pageDoc.select(".manga_read_footer div.page_select>select>option")
     val currentImgUrl: String = pageDoc.select("#viewer img").attr("src")
     val currentImgNumber: String = pageItemsOptions.select("[selected]").text()
-    logger.info(s"Got Chapter [${chapter.mangaTitle} - ${chapter.number}]  Number[$currentImgNumber] with ImageUrl[$currentImgUrl]")
+    logger.debug(s"Got Chapter [${chapter.mangaTitle} - ${chapter.number}]  Number[$currentImgNumber] with ImageUrl[$currentImgUrl]")
 
     val restPage: List[MangaTownChapterPage] = pageItemsOptions.asScala.par.map { e =>
       val doc = Jsoup.connect(e.attr("value")).get()
       val imgUrl: String = doc.select("#viewer img").attr("src")
       val number: String = e.text()
-      logger.info(s"Got Chapter  [${chapter.mangaTitle} - ${chapter.number}]   Number[$number] with ImageUrl[$imgUrl]")
+      logger.debug(s"Got Chapter  [${chapter.mangaTitle} - ${chapter.number}]   Number[$number] with ImageUrl[$imgUrl]")
       if (number.equalsIgnoreCase(currentImgNumber)) {
         new MangaTownChapterPage(number, currentImgUrl)
       } else {
@@ -80,6 +81,19 @@ class MangaTownScrapper(val url: String) {
     }.toList
 
     restPage
+  }
+
+  def downloadChapter(chapter: MangaTownChapter, destination: String): Unit = {
+    val chapterList = chapterPageList(chapter)
+    val separator = System.getProperty("file.separator")
+    val chapPath = destination + separator + chapter.number + "-" + chapter.chapterTitle
+    val downloader = ImageDownloader(chapPath)
+    chapterList.par.foreach { p =>
+      downloader.downloadImage(p.imageUrl, p.number)
+    }
+    logger.debug("Downloading Image Finished. Zipping... ")
+    val filePaths = ZipArchiveUtil.createFileList(Paths.get(chapPath).toFile, s"${chapter.number}-${chapter.chapterTitle}")
+    ZipArchiveUtil.createZip(filePaths,  s"${chapter.number}-${chapter.chapterTitle}.cbr", destination)
   }
 }
 
