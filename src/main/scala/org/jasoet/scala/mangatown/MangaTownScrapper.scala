@@ -43,9 +43,9 @@ class MangaTownScrapper(val url: String) {
 
   private lazy val _chapterList: List[MangaTownChapter] = _chapterListElements.asScala.par.map { e =>
     val chTitle = e.select("span").size() match {
-      case 2 => e.select("span").get(0).text()
-      case 3 => e.select("span").get(1).text()
-      case 4 => e.select("span").get(1).text()
+      case 2 => e.select("span").get(0).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
+      case 3 => e.select("span").get(1).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
+      case 4 => e.select("span").get(1).text().replace("new", "").replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
       case _ => ""
     }
 
@@ -133,7 +133,7 @@ class MangaTownScrapper(val url: String) {
   def downloadChapter(chapter: MangaTownChapter, destination: String): Unit = {
     val separator = System.getProperty("file.separator")
     val chapPath = destination + separator + chapter.number + "-" + chapter.chapterTitle
-    val zipDestination = destination + separator +  s"${chapter.number}-${chapter.chapterTitle}.cbz".replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
+    val zipDestination = destination + separator + s"${chapter.number}-${chapter.chapterTitle}.cbz".replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
     if (!Paths.get(zipDestination).toFile.exists()) {
       val chapterList = chapterPageList(chapter)
       val downloader = ImageDownloader(chapPath)
