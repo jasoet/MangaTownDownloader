@@ -15,9 +15,6 @@ object TownScrapTest {
   def main(args: Array[String]): Unit = {
     val shin = MangaTownScrapper("http://www.mangatown.com/manga/one_piece/")
     val st = System.currentTimeMillis()
-    println(shin.chapterList.size)
-    println("===========================")
-    println(shin.chapterList.size)
     /* shin.chapterList.foreach { c =>
        println(c.mangaTitle + ", " + c.number + ", " + c.chapterTitle + ", " + c.url)
        println("===================")
