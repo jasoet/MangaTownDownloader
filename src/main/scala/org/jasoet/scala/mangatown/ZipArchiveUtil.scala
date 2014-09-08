@@ -71,8 +71,9 @@ object ZipArchiveUtil {
       fileOutputStream.close()
 
     } catch {
-      case e: IOException =>
+      case e: Throwable => {
         e.printStackTrace()
+      }
     }
   }
 

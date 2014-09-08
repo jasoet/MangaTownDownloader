@@ -1,14 +1,18 @@
 package org.jasoet.scala.mangatown
 
+import java.io.{File, FileInputStream, FileOutputStream, IOException}
 import java.nio.file.Paths
+import java.util.zip.{ZipEntry, ZipOutputStream}
 
 import com.typesafe.scalalogging.Logger
+import org.apache.commons.io.FileUtils
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.jsoup.select.Elements
 import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
+import scala.io.{BufferedSource, Codec}
 import scala.util.control.Exception
 
 /**
@@ -83,6 +87,49 @@ class MangaTownScrapper(val url: String) {
     restPage
   }
 
+  def createFileList(file: File): List[String] = {
+    file match {
+      case fileIx if fileIx.isFile => {
+        List(fileIx.getAbsoluteFile.toString)
+      }
+      case fileIx if fileIx.isDirectory => {
+        val fList = fileIx.list
+        // Add all files in current dir to list and recur on subdirs
+        fList.foldLeft(List[String]())((pList: List[String], path: String) =>
+          pList ++ createFileList(new File(fileIx, path)))
+      }
+      case _ => throw new IOException("Bad path. No file or directory found.")
+    }
+  }
+
+  def createZip(filePaths: List[String], outputFilename: String) = {
+    try {
+      val fileOutputStream = new FileOutputStream(outputFilename)
+      val zipOutputStream = new ZipOutputStream(fileOutputStream)
+
+      filePaths.foreach((name: String) => {
+        println("adding " + name)
+        val zipEntry = new ZipEntry(new File(name).getName)
+        zipOutputStream.putNextEntry(zipEntry)
+        val inputSrc = new BufferedSource(
+          new FileInputStream(name))(Codec.ISO8859)
+        inputSrc foreach { c: Char => zipOutputStream.write(c)}
+        inputSrc.close()
+      })
+
+      zipOutputStream.closeEntry()
+      zipOutputStream.close()
+      fileOutputStream.close()
+
+      true
+    } catch {
+      case e: IOException =>
+        e.printStackTrace()
+        false
+      case _: Throwable => false
+    }
+  }
+
   def downloadChapter(chapter: MangaTownChapter, destination: String): Unit = {
     val chapterList = chapterPageList(chapter)
     val separator = System.getProperty("file.separator")
@@ -92,8 +139,11 @@ class MangaTownScrapper(val url: String) {
       downloader.downloadImage(p.imageUrl, p.number)
     }
     logger.debug("Downloading Image Finished. Zipping... ")
-    val filePaths = ZipArchiveUtil.createFileList(Paths.get(chapPath).toFile, s"${chapter.number}-${chapter.chapterTitle}")
-    ZipArchiveUtil.createZip(filePaths,  s"${chapter.number}-${chapter.chapterTitle}.cbr", destination)
+    val filePaths = createFileList(Paths.get(chapPath).toFile)
+    if (createZip(filePaths, destination + separator + s"${chapter.number}-${chapter.chapterTitle}.cbr")) {
+      logger.debug("Files Zipped, Delete directory... ")
+      FileUtils.deleteDirectory(Paths.get(chapPath).toFile)
+    }
   }
 }
 

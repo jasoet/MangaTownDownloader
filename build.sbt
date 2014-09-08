@@ -17,3 +17,5 @@ libraryDependencies += "io.spray" %% "spray-client" % "1.3.1"
 libraryDependencies += "io.spray" %% "spray-json" % "1.2.6"
 
 libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.3.5"
+
+libraryDependencies += "commons-io" % "commons-io" % "2.4"
