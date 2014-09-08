@@ -1,7 +1,6 @@
 package org.jasoet.scala.mangatown
 
 import java.io.{File, FileInputStream, FileOutputStream, IOException}
-import java.net.URLEncoder
 import java.nio.file.Paths
 import java.util.zip.{ZipEntry, ZipOutputStream}
 
@@ -134,7 +133,7 @@ class MangaTownScrapper(val url: String) {
   def downloadChapter(chapter: MangaTownChapter, destination: String): Unit = {
     val separator = System.getProperty("file.separator")
     val chapPath = destination + separator + chapter.number + "-" + chapter.chapterTitle
-    val zipDestination = destination + separator + URLEncoder.encode(s"${chapter.number}-${chapter.chapterTitle}.cbz", "UTF-8")
+    val zipDestination = destination + separator +  s"${chapter.number}-${chapter.chapterTitle}.cbz".replaceAll("[^a-zA-Z0-9 '\\.\\-]", "")
     if (!Paths.get(zipDestination).toFile.exists()) {
       val chapterList = chapterPageList(chapter)
       val downloader = ImageDownloader(chapPath)
