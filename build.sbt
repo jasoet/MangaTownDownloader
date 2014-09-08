@@ -1,4 +1,4 @@
-name := "AgodaScrap"
+name := "MangaTownScrap"
 
 version := "1.0"
 
