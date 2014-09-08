@@ -1,7 +1,7 @@
-MangaTownDownloader
+MangaTown Downloader
 ===================
 
-MangaTown Downloader using Scala, Step for Using
+MangaTown Downloader using Scala
 
 * Install Java 8 [Download](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * Install Sbt [http://www.scala-sbt.org/release/tutorial/Setup.html](http://www.scala-sbt.org/release/tutorial/Setup.html)
