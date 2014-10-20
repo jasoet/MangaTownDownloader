@@ -28,14 +28,15 @@ object AppMain extends App {
   masterActor ! Request("http://www.mangatown.com/manga/naruto/", 0, 2)
   masterActor ! Request("http://www.mangatown.com/manga/bleach/", 0, 2)
   masterActor ! Request("http://www.mangatown.com/manga/full_metal_wing/", 0, 2)
-  Thread.sleep(10000)
+  Thread.sleep(30000)
   val future = (masterActor ? Result("all")).mapTo[ArrayBuffer[MangaTown]]
   val results = Await.result(future, timeout.duration)
-  results.foreach(result => {
-    println(s"${result.title} - ${result.url}")
-    result.chapters.foreach(c => {
-      println(s"${c.title} - ${c.number}- ${c.url}")
-    })
-  })
+  val oke = for {
+    result <- results
+    chapter <- result.chapters
+  } yield (result.title, chapter.name, chapter.number, chapter.url,chapter.pages)
+
+  oke.foreach(x => println(x))
+
   _system.shutdown()
 }

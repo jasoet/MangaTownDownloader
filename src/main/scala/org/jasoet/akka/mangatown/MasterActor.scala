@@ -1,7 +1,7 @@
 package org.jasoet.akka.mangatown
 
 import akka.actor.{Actor, ActorLogging, Props}
-import akka.routing.RoundRobinRouter
+import akka.routing.{RoundRobinPool, RoundRobinRouter}
 
 import scala.collection.mutable.ArrayBuffer
 
@@ -18,9 +18,9 @@ import scala.collection.mutable.ArrayBuffer
 
 class MasterActor extends Actor with ActorLogging {
   val mangaActor = context.actorOf(Props[MangaActor].withRouter(
-    RoundRobinRouter(nrOfInstances = 15)), name = "manga")
+    RoundRobinPool(nrOfInstances = 15)), name = "manga")
   val mangaChapterActor = context.actorOf(Props[MangaChapterActor].withRouter(
-    RoundRobinRouter(nrOfInstances = 15)), name = "manga_chapter")
+    RoundRobinPool(nrOfInstances = 15)), name = "manga_chapter")
 
   val mangas = ArrayBuffer.empty[MangaTown]
 
